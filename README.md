@@ -23,7 +23,9 @@ initialize the project
 to grab a screencast of a website run the command like this:
 
 `npm run cast http://everylastdrop.co.uk every-last-drop 500`
+
 the generated gif will be located at ./gifs/every-last-drop.gif
+
 ![alt text](https://raw.githubusercontent.com/aimerib/aimerib.github.io/master/images/every-last-drop.gif "UK's Every Last Drop website screencast")
 
 the last parameter can be ommited safely.
