@@ -7,16 +7,16 @@ const GIFEncoder = require('gif-encoder');
 const encoder = new GIFEncoder(width, height);
 const fs = require('fs');
 const getPixels = require('get-pixels');
-const workDir = './temp/'
-const gifDir = './gifs/'
+const workDir = './temp/';
+const gifDir = './gifs/';
 
 if (!fs.existsSync(workDir)) {
-    fs.mkdirSync(workDir)
-}
+    fs.mkdirSync(workDir);
+};
 
 if (!fs.existsSync(gifDir)) {
-    fs.mkdirSync(gifDir)
-}
+    fs.mkdirSync(gifDir);
+};
 
 let url = process.argv[2];
 let finalGif = process.argv[3];
