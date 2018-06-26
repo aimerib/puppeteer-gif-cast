@@ -28,7 +28,10 @@ the generated gif will be located at ./gifs/every-last-drop.gif
 
 ![alt text](https://raw.githubusercontent.com/aimerib/aimerib.github.io/master/images/every-last-drop.gif "UK's Every Last Drop website screencast")
 
-the last parameter can be ommited safely.
+the last parameter can be ommited safely like so:
+
+`npm run cast https://en.wikipedia.org/wiki/JavaScript javascript`
+![alt text](https://raw.githubusercontent.com/aimerib/aimerib.github.io/master/images/javascript.gif "Wikipedia's Javascript article")
 
 ## TO DO
 * Implement W x H parameters. Right now it defaults to 768x600
