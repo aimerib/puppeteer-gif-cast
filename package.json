@@ -1,0 +1,18 @@
+{
+  "name": "puppeteer-gif-cast",
+  "version": "1.0.0",
+  "description": "Creates screencasting-like gifs of page-scrolls",
+  "main": "puppeteer-gif-cast.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "cast": "node puppeteer-gif-cast.js"
+  },
+  "keywords": [],
+  "author": "Aimeri Baddouh",
+  "license": "MIT",
+  "dependencies": {
+    "get-pixels": "^3.3.0",
+    "gif-encoder": "^0.6.1",
+    "puppeteer": "^1.5.0"
+  }
+}
