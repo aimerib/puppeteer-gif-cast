@@ -23,7 +23,7 @@ let finalGif = process.argv[3];
 let scrollLength = process.argv[4] != undefined ? process.argv[4] : 100;
 
 exports.createGIF = async function(passedURL, passedFinal) {
-  const browser = await puppeteer.launch({ headless: true });
+  const browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] });
   const page = await browser.newPage();
 
   await page.setViewport({ width: width, height: height });
