@@ -30,6 +30,7 @@ app.get('/test', async function (req, res) {
     //res.send('gif created', url);
   })
 
-app.listen(4000, () => console.log('Example app listening on port 3000!'))
+
+app.listen(3000, () => console.log('Example app listening on port 3000!'))
 
 
