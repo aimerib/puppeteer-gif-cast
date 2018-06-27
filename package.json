@@ -11,6 +11,9 @@
   "author": "Aimeri Baddouh",
   "license": "MIT",
   "dependencies": {
+    "body-parser": "^1.18.3",
+    "ejs": "^2.6.1",
+    "express": "^4.16.3",
     "get-pixels": "^3.3.0",
     "gif-encoder": "^0.6.1",
     "puppeteer": "^1.5.0"
