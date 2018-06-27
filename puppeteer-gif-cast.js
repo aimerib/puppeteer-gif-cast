@@ -21,7 +21,7 @@ if (!fs.existsSync(gifDir)) {
 let url = process.argv[2];
 let finalGif = process.argv[3];
 let scrollLength = (process.argv[4] != undefined) ? process.argv[4] : 100;
-let file = require('fs').createWriteStream(gifDir + finalGif + '.gif');
+
 
 // Setup gif encoder parameters
 encoder.setFrameRate(60);
@@ -34,6 +34,7 @@ encoder.setRepeat(0);
 //Function Declaration
 
 function addToGif(images, counter = 0) {
+    let file = require('fs').createWriteStream(gifDir + finalGif + '.gif');
     getPixels(images[counter], function (err, pixels) {
 
         encoder.addFrame(pixels.data);
@@ -73,14 +74,14 @@ function cleanUp(listOfPNGs, callback) {
     });
 }
 
-(async () => {
+exports.createGIF = async function (passedURL, passedFinal) {
     const browser = await puppeteer.launch({ headless: true });
     const page = await browser.newPage();
 
 
 
     await page.setViewport({ width: width, height: height });
-    await page.goto(url);
+    await page.goto(passedURL);
 
     async function scrollPage() {
         await page.evaluate(async (scrollLength) => {
@@ -104,5 +105,4 @@ function cleanUp(listOfPNGs, callback) {
         .map(a => workDir + a.substr(0, a.length) + '.png');
 
     addToGif(listOfPNGs);
-})();
-
+};
