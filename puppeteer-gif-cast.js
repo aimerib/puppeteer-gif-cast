@@ -75,9 +75,7 @@ exports.createGIF = async function(passedURL, passedFinal) {
           if (err) {
             console.log(err);
           } else {
-            fs.rmdirSync(workDir);
             console.log("Gif created!");
-            //process.exit(0);
           }
         });
       } else {
