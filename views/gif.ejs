@@ -6,9 +6,11 @@
     </head>
     <body>
         <% gifs.forEach(function(el) { %>
-        <p><a href="<%= el %>"><%= el %></a></p>
+        <p><a href="<%= el %>"><img src="<%= el %>" height="128" width="128"><%= el %></img></a></p>
         <% }); %>
-
+	<form action="/" method="POST">
+            <button type="submit">Generate new</button>
+        </form>
     </body>
 </html>
 
