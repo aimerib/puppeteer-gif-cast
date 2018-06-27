@@ -15,11 +15,22 @@ app.get('/', function (req, res) {
 app.post('/create', async function (req, res){
   let url = req.body.url;
   let name = req.body.name;
-  await gif.createGIF(url, name)
+  await gif.createGIF(url, name);
+  //let listOfGifs = fs.readdirSync('./gifs').filter(function(file) { return path.extname(file) === '.gif';})
+ //res.render('gif.ejs', { gifs: listOfGifs});
+  setTimeout(function () {
+    res.redirect('/view');
+}, 1000);
+  
+    
+});
+
+app.get('/view', async function (req, res){
   let listOfGifs = fs.readdirSync('./gifs').filter(function(file) { return path.extname(file) === '.gif';})
  res.render('gif.ejs', { gifs: listOfGifs});
     
 });
+
 
 app.post('/', function (req, res) {
     res.render('add.ejs');

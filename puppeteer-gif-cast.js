@@ -1,28 +1,26 @@
 "use strict";
-//A little setup ahead of time
-const width = 768;
-const height = 600;
-const puppeteer = require("puppeteer");
-const GIFEncoder = require("gif-encoder");
-const encoder = new GIFEncoder(width, height);
-const fs = require("fs");
-const getPixels = require("get-pixels");
-const workDir = "./temp/";
-const gifDir = "./gifs/";
-
-if (!fs.existsSync(workDir)) {
-  fs.mkdirSync(workDir);
-}
-
-if (!fs.existsSync(gifDir)) {
-  fs.mkdirSync(gifDir);
-}
-
-let url = process.argv[2];
-let finalGif = process.argv[3];
-let scrollLength = process.argv[4] != undefined ? process.argv[4] : 100;
-
 exports.createGIF = async function(passedURL, passedFinal) {
+  const width = 768;
+  const height = 600;
+  const puppeteer = require("puppeteer");
+  const GIFEncoder = require("gif-encoder");
+  const encoder = new GIFEncoder(width, height);
+  const fs = require("fs");
+  const getPixels = require("get-pixels");
+  const workDir = "./temp/";
+  const gifDir = "./gifs/";
+
+  if (!fs.existsSync(workDir)) {
+    fs.mkdirSync(workDir);
+  }
+
+  if (!fs.existsSync(gifDir)) {
+    fs.mkdirSync(gifDir);
+  }
+
+  let url = process.argv[2];
+  let finalGif = process.argv[3];
+  let scrollLength = process.argv[4] != undefined ? process.argv[4] : 100;
   const browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] });
   const page = await browser.newPage();
 
@@ -71,13 +69,7 @@ exports.createGIF = async function(passedURL, passedFinal) {
       encoder.read();
       if (counter === images.length - 1) {
         encoder.finish();
-        cleanUp(images, function(err) {
-          if (err) {
-            console.log(err);
-          } else {
-            console.log("Gif created!");
-          }
-        });
+        cleanUp(images, err => {if (err) {console.log(err);}});
       } else {
         addToGif(images, ++counter);
       }
@@ -100,5 +92,6 @@ exports.createGIF = async function(passedURL, passedFinal) {
   }
 
   addToGif(listOfPNGs);
-  return passedFinal + ".gif";
+  encoder.on('end', () => {file.close()});
+ 
 };
