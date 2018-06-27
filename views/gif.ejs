@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Available GIFs</title>
+    </head>
+    <body>
+        <% gifs.forEach(function(el) { %>
+        <p><a href="<%= el %>"><img src="<%= el %>" height="128" width="128"></img><br><%= el %></a></p>
+        <% }); %>
+	<form action="/" method="POST">
+            <button type="submit">Generate new</button>
+        </form>
+    </body>
+</html>
+
