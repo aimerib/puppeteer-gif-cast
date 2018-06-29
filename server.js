@@ -2,7 +2,9 @@ let express = require('express');
 let app = express();
 let gif = require('./puppeteer-gif-cast.js');
 const fs = require("fs");
-var path = require('path');
+let path = require('path');
+const width = 768;
+const height = 600;
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended: true}));
 app.set('view engine', 'ejs');
@@ -15,12 +17,11 @@ app.get('/', function (req, res) {
 app.post('/create', async function (req, res){
   let url = req.body.url;
   let name = req.body.name;
-  await gif.createGIF(url, name);
+  res.locals.name = name;
+  //gif.createGifFromArray(await gif.createGifDataArray(url, 100, width, height),width,height, res);
+  //console.log(await gif.createGIF(url,name));
   //let listOfGifs = fs.readdirSync('./gifs').filter(function(file) { return path.extname(file) === '.gif';})
- //res.render('gif.ejs', { gifs: listOfGifs});
-  setTimeout(function () {
-    res.redirect('/view');
-}, 1000);
+    console.log(await gif.createGifFromArray(await gif.createGifDataArray(url, 100, width, height),width,height, res))
   
     
 });
@@ -37,7 +38,7 @@ app.post('/', function (req, res) {
 });
 
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
     console.log(`Our app is running on port ${ PORT }`);
 });

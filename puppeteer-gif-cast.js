@@ -1,27 +1,11 @@
 "use strict";
-exports.createGIF = async function(passedURL, passedFinal) {
-  const width = 768;
-  const height = 600;
+exports.createGifDataArray = async function(passedURL, scroll, width, height) {
   const puppeteer = require("puppeteer");
-  const GIFEncoder = require("gif-encoder");
-  const encoder = new GIFEncoder(width, height);
-  const fs = require("fs");
   const getPixels = require("get-pixels");
-  const workDir = "./temp/";
-  const gifDir = "./gifs/";
-
-  if (!fs.existsSync(workDir)) {
-    fs.mkdirSync(workDir);
-  }
-
-  if (!fs.existsSync(gifDir)) {
-    fs.mkdirSync(gifDir);
-  }
-
-  let url = process.argv[2];
-  let finalGif = process.argv[3];
-  let scrollLength = process.argv[4] != undefined ? process.argv[4] : 100;
-  const browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] });
+  let scrollLength = scroll != undefined ? scroll : 100;
+  const browser = await puppeteer.launch({
+    args: ["--no-sandbox", "--disable-setuid-sandbox"]
+  });
   const page = await browser.newPage();
 
   await page.setViewport({ width: width, height: height });
@@ -32,66 +16,57 @@ exports.createGIF = async function(passedURL, passedFinal) {
       window.scrollBy(0, scrollLength);
     }, scrollLength);
   }
+  let pixelData = [];
 
   for (let i = 0; i < 60; i++) {
-    await page.screenshot({ path: workDir + i + ".png" });
+    getPixels(
+        await page.screenshot({ path: "test.png" }),
+        'image/png',
+        function(err, pixels){
+            pixelData.push(pixels.data);
+        }
+    );
     await scrollPage();
+    //console.log(pixelData);
   }
 
   await browser.close();
 
-  /*Creates array of pngs by listing files inside export folder then
-    removing extention, sort numerical strings in ascending order, and
-    finally adding path and extention to the file. */
-  let listOfPNGs = fs
-    .readdirSync(workDir)
-    .map(a => a.substr(0, a.length - 4) + "")
-    .sort(function(a, b) {
-      return a - b;
-    })
-    .map(a => workDir + a.substr(0, a.length) + ".png");
+  //let test = addToGif(listOfPNGs);
 
-  let file = require("fs").createWriteStream(gifDir + passedFinal + ".gif");
+  return pixelData;
+};
 
-  // Setup gif encoder parameters
-  encoder.setFrameRate(60);
-  encoder.pipe(file);
-  encoder.setQuality(40);
-  encoder.setDelay(500);
-  encoder.writeHeader();
-  encoder.setRepeat(0);
+exports.createGifFromArray = async function(dataArray, width, height, response){
+    var GIFEncoder = require('gifencoder');
+    function createGifEncoder(resolution, response) {
 
-  //Function Declaration
-
-  function addToGif(images, counter = 0) {
-    getPixels(images[counter], function(err, pixels) {
-      encoder.addFrame(pixels.data);
-      encoder.read();
-      if (counter === images.length - 1) {
-        encoder.finish();
-        cleanUp(images, err => {if (err) {console.log(err);}});
-      } else {
-        addToGif(images, ++counter);
+        var encoder = new GIFEncoder(resolution.width, resolution.height);
+      
+        var stream = encoder.createReadStream();
+        response.type("gif");
+        //console.log(response);
+        stream.pipe(response);
+      
+        encoder.start();
+        encoder.setRepeat(0);   // 0 for repeat, -1 for no-repeat
+        encoder.setDelay(150);  // frame delay in ms
+        encoder.setQuality(15); // image quality. 10 is default.
+      
+        return encoder;
+      
       }
-    });
-  }
 
-  function cleanUp(listOfPNGs, callback) {
-    let i = listOfPNGs.length;
-    listOfPNGs.forEach(function(filepath) {
-      fs.unlink(filepath, function(err) {
-        i--;
-        if (err) {
-          callback(err);
-          return;
-        } else if (i <= 0) {
-          callback(null);
+      function sendAsGIF(response, data) {
+
+        var encoder = createGifEncoder({width, height}, response);
+        for (let i = 0; i < data.length; i++) {
+            encoder.addFrame(data[i])
         }
-      });
-    });
-  }
+        encoder.finish();
+        return encoder;
+      
+      };
+      return sendAsGIF(response, dataArray);
 
-  addToGif(listOfPNGs);
-  encoder.on('end', () => {file.close()});
- 
 };
